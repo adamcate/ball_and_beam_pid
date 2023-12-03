@@ -43,7 +43,7 @@ class PID
                                           //   of changing tunings during runtime for Adaptive control
     void SetTunings(double, double,       // * overload for specifying proportional mode
                     double, int);         	  
-
+    void SetDerivativeFilterSamples(int); // set the derivative low pass filter sample number 
 	void SetControllerDirection(int);	  // * Sets the Direction, or "Action" of the controller. DIRECT
 										  //   means the output will increase when error is positive. REVERSE
 										  //   means the opposite.  it's very unlikely that this will be needed
@@ -78,7 +78,8 @@ class PID
     double *myOutput;             //   This creates a hard link between the variables and the 
     double *mySetpoint;           //   PID, freeing the user from having to constantly tell us
                                   //   what these values are.  with pointers we'll just know.
-			  
+		double *myDerivativeSamples;
+    int num_samples = 0;
 	unsigned long lastTime;
 	double outputSum, lastInput;
 

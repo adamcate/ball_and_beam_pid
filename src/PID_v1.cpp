@@ -65,7 +65,20 @@ bool PID::Compute()
       /*Compute all the working error variables*/
       double input = *myInput;
       double error = *mySetpoint - input;
+
       double dInput = (input - lastInput);
+
+      if(num_samples){
+         double sum{};
+         for(int i = 0; i < this->num_samples - 1; ++i){
+            myDerivativeSamples[i] = myDerivativeSamples[i + 1];
+            sum += myDerivativeSamples[i];
+         }
+         myDerivativeSamples[this->num_samples - 1] = dInput;
+         sum += dInput;
+         dInput = sum / ((double)num_samples);
+      }
+
       outputSum+= (ki * error);
 
       /*Add Proportional on Measurement, if P_ON_M is specified*/
@@ -221,4 +234,14 @@ double PID::GetKi(){ return  dispKi;}
 double PID::GetKd(){ return  dispKd;}
 int PID::GetMode(){ return  inAuto ? AUTOMATIC : MANUAL;}
 int PID::GetDirection(){ return controllerDirection;}
+
+void PID::SetDerivativeFilterSamples(int num){
+   if(num_samples) return;
+
+   num_samples = num;
+   myDerivativeSamples = new double[num];
+   for(int i = 0; i < num; ++i){
+      myDerivativeSamples[i] = 0.0;
+   }
+}
 
