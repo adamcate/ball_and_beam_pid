@@ -29,7 +29,7 @@ int pot_samples[POTENTIOMETER_SAMPLES]{};
 // Define vars we'll be connecting to
 double Setpoint, Input, Output;
 
-double Kp = 0.03144, Ki = 0.0252, Kd = 0.03;
+double Kp = 0.03144, Ki = 0.0252, Kd = 0.02;
 //double Kp = 0, Ki = 0, Kd = 0.05;
 
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
@@ -73,7 +73,7 @@ void loop() {
   last_dist = dist;
   
   if(curr_time - last_time >=  PING_INTERVAL){
-    Serial.print("s");Serial.print(Setpoint);Serial.print("i"); Serial.print(Input);Serial.print("o");Serial.println((int)degrees(Output));
+    Serial.print((int)Setpoint);Serial.print(",");Serial.print((int)Input);Serial.print(",");Serial.println((int)degrees(Output));
     int pot_sample = (int)(analogRead(A1)/1023.f*18.f + 7.f);
 
     add_sample(constrain(pot_sample,7,25), pot_samples, POTENTIOMETER_SAMPLES);
@@ -81,8 +81,6 @@ void loop() {
 
     last_time = curr_time;  
     dist = sonar.ping_cm();
-
-    //Serial.println(dist);
 
     if(dist > 27 && dist < 30){dist = 27;}
 
@@ -95,9 +93,9 @@ void loop() {
   
   Input = get_median(sorted_samples, MEDIAN_SAMPLES);
 
-  if(abs(Input - Setpoint) <= 1){
+  /*if(abs(Input - Setpoint) <= 1){
     Input = Setpoint;
-  }
+  }*/
 
   myPID.Compute();
 
