@@ -1,3 +1,8 @@
+/*
+filter.cpp
+created by: Adam Cate
+*/
+
 #include "filter.h"
 #include <Arduino.h>
 

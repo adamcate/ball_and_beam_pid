@@ -1,3 +1,8 @@
+/*
+filter.h
+created by: Adam Cate
+*/
+
 #pragma once
 
 int get_median(int *array, int num);
